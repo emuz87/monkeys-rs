@@ -1,9 +1,4 @@
-static ALPHA: [char; 26] = [
-    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-    'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
-];
-
-use rand::{seq::SliceRandom, rngs::ThreadRng};
+use rand::{Rng, rngs::ThreadRng};
 
 pub struct Monkey<'a> {
     rng: ThreadRng,
@@ -17,7 +12,7 @@ impl Iterator for Monkey<'_> {
         self.attempts+=1;
         let mut buf = String::new();
         (0..self.string_length).into_iter()
-            .for_each(|_| buf.push(*ALPHA.choose(&mut self.rng).unwrap()));
+            .for_each(|_| buf.push(self.rng.gen::<u8>() as char));
         Some(buf)
     }
 }
@@ -25,7 +20,7 @@ impl<'a> Monkey<'a> {
     pub fn new(string: &'a str) -> Self {
         Self {
             rng: rand::thread_rng(),
-            string,
+            string: string,
             string_length: string.len(),
             attempts: 0
         }
